@@ -75,6 +75,16 @@ export default function HomeClient({
     return getUnlockedEntries(initialEntries, user, serverNow);
   }, [initialEntries, serverNow, user]);
 
+  const featuredEntry = useMemo(
+    () => unlockedEntries.find((entry) => entry.type === "notice") ?? null,
+    [unlockedEntries]
+  );
+
+  const diaryEntries = useMemo(
+    () => unlockedEntries.filter((entry) => entry.type !== "notice"),
+    [unlockedEntries]
+  );
+
   const eventLogs = useMemo(() => {
     if (!user) {
       return [];
@@ -84,22 +94,22 @@ export default function HomeClient({
   }, [user]);
 
   const selectedEntry = useMemo(() => {
-    if (!unlockedEntries.length) {
+    if (!diaryEntries.length) {
       return null;
     }
 
     return (
-      unlockedEntries.find((entry) => entry.id === selectedEntryId) ??
-      unlockedEntries[0]
+      diaryEntries.find((entry) => entry.id === selectedEntryId) ??
+      diaryEntries[0]
     );
-  }, [selectedEntryId, unlockedEntries]);
+  }, [diaryEntries, selectedEntryId]);
 
   useEffect(() => {
-    const nextSelectedEntryId = getDefaultSelectedEntryId(unlockedEntries, selectedEntryId);
+    const nextSelectedEntryId = getDefaultSelectedEntryId(diaryEntries, selectedEntryId);
     if (nextSelectedEntryId !== selectedEntryId) {
       setSelectedEntryId(nextSelectedEntryId);
     }
-  }, [selectedEntryId, unlockedEntries]);
+  }, [diaryEntries, selectedEntryId]);
 
   function updateUser(nextUser) {
     saveUserState(nextUser);
@@ -267,6 +277,7 @@ export default function HomeClient({
                         />
                       </div>
                       <div className="hero-poster-copy">
+                        <div className="poster-kicker">欢迎来到</div>
                         <div className="poster-welcome">Welcome to</div>
                         <h1>未麻の部屋</h1>
                         <p>mima&apos;s personal homepage</p>
@@ -280,6 +291,13 @@ export default function HomeClient({
                       <span>diary</span>
                       <span>live report</span>
                       <span>mima&apos;s room</span>
+                      <button
+                        className="hero-tab-button"
+                        onClick={() => handleOpenDesktopWindow("contact")}
+                        type="button"
+                      >
+                        contact
+                      </button>
                     </div>
                   </section>
 
@@ -315,7 +333,8 @@ export default function HomeClient({
 
                     <section className="storyboard">
                       <DiaryView
-                        entries={unlockedEntries}
+                        featuredEntry={featuredEntry}
+                        entries={diaryEntries}
                         user={user}
                         selectedEntryId={selectedEntry?.id ?? null}
                         onOpenEntry={handleOpenEntry}
@@ -445,6 +464,28 @@ export default function HomeClient({
                               <button className="button primary" onClick={handleGuestbookSubmit}>
                                 送出邮件
                               </button>
+                            </div>
+                          </>
+                        ) : desktopWindow === "contact" ? (
+                          <>
+                            <h3>如何联系</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>工作室地址</strong>
+                                <span>东京涩谷区神南 2-14-7 CHAM 事务联络室</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>联系邮箱</strong>
+                                <span>mima-room@cham-office.jp</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>合作方式</strong>
+                                <span>杂志拍摄、广播节目、活动出演、品牌联动来信请注明时间与企划概要。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>来信说明</strong>
+                                <span>粉丝来信与工作联系会分开整理，回复可能会慢一点，请温柔一点等我。</span>
+                              </div>
                             </div>
                           </>
                         ) : (

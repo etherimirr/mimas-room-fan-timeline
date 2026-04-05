@@ -125,6 +125,7 @@ textarea {
   flex-direction: column;
   max-height: calc(100vh - 180px);
   overflow: hidden;
+  z-index: 2;
   transition: width 180ms ease, margin 180ms ease;
 }
 
@@ -330,6 +331,13 @@ textarea {
   padding: 6px 2px;
 }
 
+.poster-kicker {
+  color: #b56d86;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+}
+
 .poster-welcome {
   color: #4c5c74;
   font-style: italic;
@@ -361,6 +369,23 @@ textarea {
   background: rgba(255, 255, 255, 0.8);
   font-size: 12px;
   text-transform: uppercase;
+}
+
+.hero-tab-button {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid rgba(143, 180, 216, 0.5);
+  color: #6b8eb2;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.hero-tab-button:hover {
+  background: rgba(255, 245, 250, 0.95);
+  border-color: rgba(203, 126, 157, 0.45);
+  color: #b66686;
 }
 
 .dashboard {
@@ -603,6 +628,26 @@ textarea {
   resize: vertical;
 }
 
+.contact-sheet {
+  display: grid;
+  gap: 10px;
+}
+
+.contact-card {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid rgba(173, 181, 201, 0.7);
+  background: rgba(255, 255, 255, 0.84);
+  color: #6f667a;
+  line-height: 1.7;
+}
+
+.contact-card strong {
+  color: #8a6f86;
+  font-size: 14px;
+}
+
 
 .storyboard {
   display: grid;
@@ -730,6 +775,10 @@ textarea {
   box-shadow: 0 0 0 1px rgba(210, 143, 171, 0.25), 0 14px 28px var(--shadow);
 }
 
+.entry-featured {
+  cursor: default;
+}
+
 .entry::before {
   content: "";
   position: absolute;
@@ -760,6 +809,21 @@ textarea {
   margin: 0;
   line-height: 1.75;
   color: #65556f;
+}
+
+.entry-thumbnail {
+  position: relative;
+  width: 100%;
+  min-height: 170px;
+  margin: 0 0 14px;
+  overflow: hidden;
+  border: 1px solid rgba(136, 110, 119, 0.28);
+  background: linear-gradient(135deg, #efb253 0%, #f7d98d 32%, #8bb8d7 32%, #8bb8d7 54%, #d45747 54%, #d45747 100%);
+}
+
+.entry-thumbnail-image {
+  object-fit: cover;
+  filter: saturate(0.98) contrast(1.02) brightness(1.02);
 }
 
 .detail-panel {

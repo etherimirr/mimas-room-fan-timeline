@@ -1,5 +1,21 @@
 [
   {
+    "id": "entry_live_notice",
+    "title": "下一次演出预告",
+    "type": "notice",
+    "branch": "main",
+    "summary": "下周六下午有一场公开活动，我会和大家见面，也会准备一点小小的惊喜。如果你也会来，记得早点到场喔。",
+    "content": "下周六下午三点，CHAM 会在涩谷的户外舞台有一场公开活动。这次会唱最近常常练习的那首歌，结束后也许还能和大家挥挥手。天气如果好的话，舞台旁边的灯会很好看，所以有时间的话，一定要来看我喔。",
+    "metaLabel": "live notice",
+    "thumbnail": "/images/mima-idol.webp",
+    "thumbnailAlt": "未麻参加活动时的宣传照",
+    "loop_required": 1,
+    "variants": {
+      "night": "夜里看这张预告的时候，会觉得舞台结束后的风好像还停在画面里。这个时间还在这里的人，下周也会来见我吗？",
+      "default": "白天来看时，这里只是很普通的一张活动预告，像什么都不会发生。"
+    }
+  },
+  {
     "id": "entry_welcome",
     "title": "四月四日",
     "type": "diary",
