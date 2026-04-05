@@ -6,6 +6,7 @@ import DiaryView from "@/components/DiaryView";
 import DiaryDetail from "@/components/DiaryDetail";
 import StatusPanel from "@/components/StatusPanel";
 import { getDefaultSelectedEntryId } from "@/lib/content";
+import { isNightTime } from "@/lib/time";
 import {
   applyEventEffects,
   getUnlockedEntries,
@@ -24,6 +25,7 @@ export default function HomeClient({
   const [comment, setComment] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [selectedEntryId, setSelectedEntryId] = useState(null);
+  const [activeTab, setActiveTab] = useState("home");
   const [mainWindowVisible, setMainWindowVisible] = useState(true);
   const [mainWindowMinimized, setMainWindowMinimized] = useState(false);
   const [mainWindowExpanded, setMainWindowExpanded] = useState(false);
@@ -102,6 +104,8 @@ export default function HomeClient({
     return getVisibleEventLogs(user.event_log ?? []);
   }, [user]);
 
+  const isNightVisit = useMemo(() => isNightTime(serverNow), [serverNow]);
+
   const selectedEntry = useMemo(() => {
     if (!selectableEntries.length) {
       return null;
@@ -168,6 +172,12 @@ export default function HomeClient({
     }
 
     setSelectedEntryId(entryId);
+    const targetEntry = selectableEntries.find((entry) => entry.id === entryId);
+    if (targetEntry?.type === "notice") {
+      setActiveTab("live");
+    } else {
+      setActiveTab("diary");
+    }
     updateUser(markEntryAsRead(user, entryId));
   }
 
@@ -229,6 +239,10 @@ export default function HomeClient({
     setMainWindowVisible(true);
     setMainWindowMinimized(false);
     setDesktopWindow(null);
+  }
+
+  function handleBrowserTabChange(nextTab) {
+    setActiveTab(nextTab);
   }
 
   function handleMainWindowDragStart(event) {
@@ -298,14 +312,14 @@ export default function HomeClient({
     <main className="shell">
       <section className="room-stage">
         <div className="monitor-shell">
-          <div className="monitor-screen">
+          <div className={`monitor-screen${isNightVisit ? " night-mode" : ""}`}>
             <div className="desktop-surface" ref={desktopSurfaceRef}>
               {mainWindowVisible ? (
                 <div
                   ref={mainWindowRef}
                   className={`desktop-window desktop-window-main${
                     mainWindowExpanded ? " expanded" : ""
-                  }`}
+                  }${isNightVisit ? " night-mode" : ""}`}
                   style={
                     mainWindowExpanded
                       ? { top: 12, left: 12 }
@@ -336,93 +350,294 @@ export default function HomeClient({
                     />
                   </div>
                   <div className="browser-strip">
-                    <span className="browser-chip">home</span>
-                    <span className="browser-chip">diary</span>
-                    <span className="browser-chip">memo</span>
-                    <span className="browser-chip active">mima_room</span>
-                  </div>
-
-                  <section className="hero">
-                    <span className="eyebrow">Welcome to Mima&apos;s Room</span>
-                    <div className="marquee">
-                      welcome to my personal homepage... thank you for visiting again...
-                    </div>
-                    <div className="hero-poster">
-                      <div className="hero-poster-portrait">
-                        <Image
-                          src="/images/mima-idol.webp"
-                          alt="Mima idol era portrait"
-                          fill
-                          sizes="(max-width: 900px) 100vw, 180px"
-                          className="hero-poster-image"
-                        />
-                      </div>
-                      <div className="hero-poster-copy">
-                        <div className="poster-kicker">欢迎来到</div>
-                        <div className="poster-welcome">Welcome to</div>
-                        <h1>未麻の部屋</h1>
-                        <p>mima&apos;s personal homepage</p>
-                      </div>
-                    </div>
-                    <p>
-                      大家好喔！这里是未麻的个人网站，会分享我的日记，日常演出和生活！
-                      请多多来支持我哦。
-                    </p>
-                    <div className="hero-stamps">
-                      <span>diary</span>
-                      <span>live report</span>
-                      <span>mima&apos;s room</span>
+                    {[
+                      { id: "home", label: "home" },
+                      { id: "diary", label: "diary" },
+                      { id: "gallery", label: "gallery" },
+                      { id: "live", label: "live" },
+                      { id: "contact", label: "contact" }
+                    ].map((tab) => (
                       <button
-                        className="hero-tab-button"
-                        onClick={() => handleOpenDesktopWindow("contact")}
+                        className={`browser-chip${activeTab === tab.id ? " active" : ""}`}
+                        key={tab.id}
+                        onClick={() => handleBrowserTabChange(tab.id)}
                         type="button"
                       >
-                        contact
+                        {tab.label}
                       </button>
-                    </div>
-                  </section>
+                    ))}
+                  </div>
 
-                  <section className="dashboard">
-                    <aside className="panel pad utility-panel">
-                      <StatusPanel user={user} serverNow={serverNow} eventLogs={eventLogs} />
-                      <div className="composer">
-                        <input
-                          className="name-input"
-                          value={displayName}
-                          onChange={(event) => setDisplayName(event.target.value)}
-                          placeholder="留下你的名字"
-                        />
-                        <textarea
-                          rows={4}
-                          value={comment}
-                          onChange={(event) => setComment(event.target.value)}
-                          placeholder="给未麻留一句话吧"
-                        />
-                        <div className="button-row">
-                          <button className="button primary" onClick={handleCommentSubmit}>
-                            送出留言
+                  {activeTab === "home" ? (
+                    <>
+                      <section className={`hero${isNightVisit ? " night-mode" : ""}`}>
+                        <span className="eyebrow">Welcome to Mima&apos;s Room</span>
+                        <div className={`marquee${isNightVisit ? " night-marquee" : ""}`}>
+                          {isNightVisit
+                            ? "the room is quieter at night... thank you for staying a little longer..."
+                            : "welcome to my personal homepage... thank you for visiting again..."}
+                        </div>
+                        <div className="hero-poster">
+                          <div className="hero-poster-portrait">
+                            <Image
+                              src="/images/mima-idol.webp"
+                              alt="Mima idol era portrait"
+                              fill
+                              sizes="(max-width: 900px) 100vw, 180px"
+                              className="hero-poster-image"
+                            />
+                          </div>
+                          <div className="hero-poster-copy">
+                            <div className="poster-kicker">欢迎来到</div>
+                            <div className={`poster-welcome${isNightVisit ? " melt-text" : ""}`}>Welcome to</div>
+                            <h1>未麻の部屋</h1>
+                            <p>mima&apos;s personal homepage</p>
+                          </div>
+                        </div>
+                        <p>
+                          {isNightVisit
+                            ? "这么晚还来看我吗？这里晚上会安静一点，也会把白天没说完的小事慢慢放出来。"
+                            : "大家好喔！这里是未麻的个人网站，会分享我的日记，日常演出和生活！请多多来支持我哦。"}
+                        </p>
+                        {isNightVisit ? (
+                          <p className="night-whisper float-text">
+                            现在这个时间，页面像是只剩下你和我在看着它。
+                          </p>
+                        ) : null}
+                        <div className="hero-stamps">
+                          <button
+                            className="hero-tab-button"
+                            onClick={() => handleOpenDesktopWindow("profile")}
+                            type="button"
+                          >
+                            生平介绍
                           </button>
-                          <button className="button secondary" onClick={handleNameSave}>
-                            保存名字
+                          <button
+                            className="hero-tab-button"
+                            onClick={() => handleOpenDesktopWindow("secret")}
+                            type="button"
+                          >
+                            独家揭秘
                           </button>
-                          <button className="button secondary" onClick={handleLoopAdvance}>
-                            打开隐藏页
+                          <button
+                            className="hero-tab-button"
+                            onClick={() => handleOpenDesktopWindow("reports")}
+                            type="button"
+                          >
+                            报道
+                          </button>
+                          <button
+                            className="hero-tab-button"
+                            onClick={() => handleOpenDesktopWindow("contact")}
+                            type="button"
+                          >
+                            contact
                           </button>
                         </div>
-                      </div>
-                    </aside>
+                      </section>
 
-                    <section className="storyboard">
-                      <DiaryView
-                        featuredEntry={featuredEntry}
-                        entries={diaryEntries}
-                        user={user}
-                        selectedEntryId={selectedEntry?.id ?? null}
-                        onOpenEntry={handleOpenEntry}
-                      />
-                      <DiaryDetail entry={selectedEntry} user={user} />
+                      <section className="dashboard">
+                        <aside className="panel pad utility-panel">
+                          <StatusPanel user={user} serverNow={serverNow} eventLogs={eventLogs} />
+                          <div className="composer">
+                            <input
+                              className="name-input"
+                              value={displayName}
+                              onChange={(event) => setDisplayName(event.target.value)}
+                              placeholder="留下你的名字"
+                            />
+                            <textarea
+                              rows={4}
+                              value={comment}
+                              onChange={(event) => setComment(event.target.value)}
+                              placeholder="给未麻留一句话吧"
+                            />
+                            <div className="button-row">
+                              <button className="button primary" onClick={handleCommentSubmit}>
+                                送出留言
+                              </button>
+                              <button className="button secondary" onClick={handleNameSave}>
+                                保存名字
+                              </button>
+                              <button className="button secondary" onClick={handleLoopAdvance}>
+                                打开隐藏页
+                              </button>
+                            </div>
+                          </div>
+                          <div className="links-panel">
+                            <span className="links-title">favorite links</span>
+                            <button
+                              className="favorite-link"
+                              onClick={() => handleOpenDesktopWindow("cham")}
+                              type="button"
+                            >
+                              CHAM official
+                            </button>
+                            <button
+                              className="favorite-link"
+                              onClick={() => handleOpenDesktopWindow("fanclub")}
+                              type="button"
+                            >
+                              fan club
+                            </button>
+                            <button
+                              className="favorite-link"
+                              onClick={() => handleOpenDesktopWindow("station")}
+                              type="button"
+                            >
+                              tv station
+                            </button>
+                            <button
+                              className="favorite-link"
+                              onClick={() => handleOpenDesktopWindow("bookmarks")}
+                              type="button"
+                            >
+                              favorite links
+                            </button>
+                          </div>
+                        </aside>
+
+                        <section className="storyboard">
+                          <DiaryView
+                            featuredEntry={featuredEntry}
+                            entries={diaryEntries}
+                            user={user}
+                            selectedEntryId={selectedEntry?.id ?? null}
+                            onOpenEntry={handleOpenEntry}
+                          />
+                          <DiaryDetail entry={selectedEntry} user={user} />
+                        </section>
+                      </section>
+                    </>
+                  ) : null}
+
+                  {activeTab === "diary" ? (
+                    <section className="dashboard dashboard-single">
+                      <section className="storyboard storyboard-wide">
+                        <DiaryView
+                          featuredEntry={null}
+                          entries={diaryEntries}
+                          user={user}
+                          selectedEntryId={selectedEntry?.id ?? null}
+                          onOpenEntry={handleOpenEntry}
+                        />
+                        <DiaryDetail entry={selectedEntry} user={user} />
+                      </section>
                     </section>
-                  </section>
+                  ) : null}
+
+                  {activeTab === "live" ? (
+                    <section className="dashboard dashboard-single">
+                      <section className={`panel pad live-panel${isNightVisit ? " night-mode" : ""}`}>
+                        <div className="detail-kicker">live schedule</div>
+                        <h2>{featuredEntry?.title ?? "下一次演出预告"}</h2>
+                        <div className="live-panel-grid">
+                          <div className="live-poster">
+                            <Image
+                              src={featuredEntry?.thumbnail ?? "/images/mima-idol.webp"}
+                              alt={featuredEntry?.thumbnailAlt ?? "Mima live notice"}
+                              fill
+                              sizes="(max-width: 900px) 100vw, 320px"
+                              className="file-photo-image"
+                            />
+                          </div>
+                          <div className="live-copy">
+                            <p>{featuredEntry?.content ?? "下周会有新的公开活动。"}</p>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>活动时间</strong>
+                                <span>下周六 15:00</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>活动地点</strong>
+                                <span>涩谷户外舞台 / CHAM 特别公开活动</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>小提示</strong>
+                                <span>如果来得早一点，也许能在开场前看见未麻彩排。</span>
+                              </div>
+                            </div>
+                            <div className="live-video-shell">
+                              <div className="live-video-header">
+                                <span>video player</span>
+                                <span>stand by</span>
+                              </div>
+                              <div className="live-video-frame">
+                                <div className={`live-video-screen${isNightVisit ? " night-player" : ""}`}>
+                                  <span className={isNightVisit ? "melt-text" : ""}>
+                                    {isNightVisit ? "现在没有影片播放" : "暂无影片播放"}
+                                  </span>
+                                  <small>
+                                    {isNightVisit
+                                      ? "夜里打开时，播放器会比白天更安静一点。后续剧情触发时，这里会出现演出录像或异常影像。"
+                                      : "后续剧情触发时，这里会出现演出录像或异常影像。"}
+                                  </small>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </section>
+                  ) : null}
+
+                  {activeTab === "gallery" ? (
+                    <section className="dashboard dashboard-single">
+                      <section className="panel pad gallery-panel">
+                        <div className="detail-kicker">photo gallery</div>
+                        <h2>未麻的图集</h2>
+                        <div className="gallery-grid">
+                          {[1, 2, 3].map((item) => (
+                            <figure className="gallery-card" key={item}>
+                              <div className="gallery-image-wrap">
+                                <Image
+                                  src="/images/mima-idol.webp"
+                                  alt={`Mima gallery image ${item}`}
+                                  fill
+                                  sizes="(max-width: 900px) 100vw, 260px"
+                                  className="gallery-image"
+                                />
+                              </div>
+                              <figcaption>
+                                {item === 1
+                                  ? "舞台灯光还没有全亮的时候"
+                                  : item === 2
+                                    ? "CHAM 活动结束后的合影"
+                                    : "拍摄日留在后台的小照片"}
+                              </figcaption>
+                            </figure>
+                          ))}
+                        </div>
+                      </section>
+                    </section>
+                  ) : null}
+
+                  {activeTab === "contact" ? (
+                    <section className="dashboard dashboard-single">
+                      <section className="panel pad contact-panel-page">
+                        <div className="detail-kicker">contact</div>
+                        <h2>如何联系未麻</h2>
+                        <div className="contact-sheet">
+                          <div className="contact-card">
+                            <strong>工作室地址</strong>
+                            <span>东京涩谷区神南 2-14-7 CHAM 事务联络室</span>
+                          </div>
+                          <div className="contact-card">
+                            <strong>联系邮箱</strong>
+                            <span>mima-room@cham-office.jp</span>
+                          </div>
+                          <div className="contact-card">
+                            <strong>合作方式</strong>
+                            <span>杂志拍摄、广播节目、活动出演、品牌联动来信请注明时间与企划概要。</span>
+                          </div>
+                          <div className="contact-card">
+                            <strong>来信说明</strong>
+                            <span>粉丝来信与工作联系会分开整理，回复可能会慢一点，请温柔一点等我。</span>
+                          </div>
+                        </div>
+                      </section>
+                    </section>
+                  ) : null}
                 </div>
               ) : null}
 
@@ -568,6 +783,112 @@ export default function HomeClient({
                                 <span>粉丝来信与工作联系会分开整理，回复可能会慢一点，请温柔一点等我。</span>
                               </div>
                             </div>
+                          </>
+                        ) : desktopWindow === "profile" ? (
+                          <>
+                            <h3>未麻的生平介绍</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>所属组合</strong>
+                                <span>CHAM! 偶像组合成员之一，以清新路线和现场亲和力被熟悉。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>职业路径</strong>
+                                <span>从偶像活动、杂志拍摄，到广播与影视相关工作，逐渐开始扩大自己的舞台。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>最近近况</strong>
+                                <span>除了练习和演出，也开始尝试更多镜头前的工作，最近常常在摄影棚和录音间来回跑。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "secret" ? (
+                          <>
+                            <h3>未麻的独家揭秘</h3>
+                            <div className="guestbook-thread">
+                              <div className="guestbook-bubble mima">
+                                <strong>今天的小分享</strong>
+                                <span>拍摄结束后去便利店买了草莓牛奶，冰柜前站了好久才选好。</span>
+                              </div>
+                              <div className="guestbook-bubble fan">
+                                <strong>后台小事</strong>
+                                <span>化妆间的灯有时候太亮了，照镜子会有点不像平时的自己。</span>
+                              </div>
+                              <div className="guestbook-bubble mima">
+                                <strong>只写在这里</strong>
+                                <span>有些话不太适合正式采访里说，所以就偷偷放在这个页面里。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "reports" ? (
+                          <>
+                            <h3>最近报道</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>《偶像月刊》</strong>
+                                <span>CHAM! 新舞台服装幕后采访，未麻提到最近最喜欢的排练时刻是开场前的灯光测试。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>电台节目摘录</strong>
+                                <span>未麻说，最开心的是有人会记得她在某一场活动里说过的小句子。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>活动现场报道</strong>
+                                <span>涩谷公开活动结束后，现场粉丝停留了很久，直到舞台灯慢慢关掉。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "cham" ? (
+                          <>
+                            <h3>CHAM official</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>本周公告</strong>
+                                <span>CHAM! 下周将参加涩谷户外特别活动，请大家继续支持三人的新舞台。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>成员更新</strong>
+                                <span>未麻最近在练习之外也开始尝试更多拍摄与广播相关工作。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "fanclub" ? (
+                          <>
+                            <h3>fan club</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>会员留言</strong>
+                                <span>“今天也来看未麻的主页了，晚上打开的时候真的会更安静一点。”</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>应援信息</strong>
+                                <span>下次活动前，大家会准备新的手幅和应援卡片。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "station" ? (
+                          <>
+                            <h3>tv station</h3>
+                            <div className="contact-sheet">
+                              <div className="contact-card">
+                                <strong>节目预告</strong>
+                                <span>未麻预计将在本周广播节目中读到部分观众来信，也可能提到新的演出安排。</span>
+                              </div>
+                              <div className="contact-card">
+                                <strong>录影棚消息</strong>
+                                <span>节目组说，最近她在镜头前显得比以前更安静，也更让人移不开视线。</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : desktopWindow === "bookmarks" ? (
+                          <>
+                            <h3>favorite links</h3>
+                            <ul className="schedule-list">
+                              <li>CHAM official</li>
+                              <li>fan club board</li>
+                              <li>tv station weekly</li>
+                              <li>idol magazine archive</li>
+                            </ul>
                           </>
                         ) : (
                           <>
