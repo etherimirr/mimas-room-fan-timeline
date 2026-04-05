@@ -1,0 +1,61 @@
+[
+  {
+    "id": "page-view-repeat-visitor",
+    "trigger": "page_view",
+    "conditions": {
+      "min_visit_count": 2
+    },
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "repeat_visitor",
+        "value": true
+      },
+      {
+        "type": "log",
+        "message": "系统注意到你反复回来了。"
+      }
+    ]
+  },
+  {
+    "id": "comment-parasocial-hook",
+    "trigger": "comment_submitted",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "left_comment",
+        "value": true
+      },
+      {
+        "type": "set_flag",
+        "flag": "parasocial_hook",
+        "value": true
+      },
+      {
+        "type": "switch_branch",
+        "branch": "comment_branch"
+      },
+      {
+        "type": "remember_comment"
+      },
+      {
+        "type": "log",
+        "message": "她可能会记住这条留言。"
+      }
+    ]
+  },
+  {
+    "id": "advance-loop",
+    "trigger": "manual_loop_advance",
+    "effects": [
+      {
+        "type": "advance_loop",
+        "amount": 1
+      },
+      {
+        "type": "log",
+        "message": "时间线已经折返。"
+      }
+    ]
+  }
+]
