@@ -317,6 +317,14 @@ export default function HomeClient({
                   <span className="desktop-folder schedule" />
                   <span>未麻的行程</span>
                 </button>
+                <button
+                  className="desktop-icon desktop-icon-trash"
+                  onClick={() => handleOpenDesktopWindow("trash")}
+                  type="button"
+                >
+                  <span className="desktop-trash" />
+                  <span>回收站</span>
+                </button>
                 {mainWindowMinimized ? (
                   <button className="desktop-icon" onClick={handleRestoreMainWindow} type="button">
                     <span className="desktop-folder room" />
@@ -366,12 +374,25 @@ export default function HomeClient({
                       </>
                     ) : (
                       <>
-                        <h3>未麻的行程</h3>
-                        <ul className="schedule-list">
-                          <li>4/5 14:00 杂志拍摄</li>
-                          <li>4/6 18:30 电台录音</li>
-                          <li>4/8 17:00 CHAM 现场活动</li>
-                        </ul>
+                        {desktopWindow === "schedule" ? (
+                          <>
+                            <h3>未麻的行程</h3>
+                            <ul className="schedule-list">
+                              <li>4/5 14:00 杂志拍摄</li>
+                              <li>4/6 18:30 电台录音</li>
+                              <li>4/8 17:00 CHAM 现场活动</li>
+                            </ul>
+                          </>
+                        ) : (
+                          <>
+                            <h3>回收站</h3>
+                            <ul className="trash-list">
+                              <li>old_index.html</li>
+                              <li>memo_draft.txt</li>
+                              <li>guestbook_copy.log</li>
+                            </ul>
+                          </>
+                        )}
                       </>
                     )}
                   </div>
