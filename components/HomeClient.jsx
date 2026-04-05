@@ -85,6 +85,11 @@ export default function HomeClient({
     [unlockedEntries]
   );
 
+  const selectableEntries = useMemo(
+    () => (featuredEntry ? [featuredEntry, ...diaryEntries] : diaryEntries),
+    [diaryEntries, featuredEntry]
+  );
+
   const eventLogs = useMemo(() => {
     if (!user) {
       return [];
@@ -94,22 +99,22 @@ export default function HomeClient({
   }, [user]);
 
   const selectedEntry = useMemo(() => {
-    if (!diaryEntries.length) {
+    if (!selectableEntries.length) {
       return null;
     }
 
     return (
-      diaryEntries.find((entry) => entry.id === selectedEntryId) ??
-      diaryEntries[0]
+      selectableEntries.find((entry) => entry.id === selectedEntryId) ??
+      selectableEntries[0]
     );
-  }, [diaryEntries, selectedEntryId]);
+  }, [selectableEntries, selectedEntryId]);
 
   useEffect(() => {
-    const nextSelectedEntryId = getDefaultSelectedEntryId(diaryEntries, selectedEntryId);
+    const nextSelectedEntryId = getDefaultSelectedEntryId(selectableEntries, selectedEntryId);
     if (nextSelectedEntryId !== selectedEntryId) {
       setSelectedEntryId(nextSelectedEntryId);
     }
-  }, [diaryEntries, selectedEntryId]);
+  }, [selectableEntries, selectedEntryId]);
 
   function updateUser(nextUser) {
     saveUserState(nextUser);

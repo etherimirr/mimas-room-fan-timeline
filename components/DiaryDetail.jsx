@@ -15,9 +15,11 @@ export default function DiaryDetail({ entry, user }) {
     entry.content
   );
 
+  const detailKicker = entry.type === "notice" ? "live notice" : "diary page";
+
   return (
     <article className="panel pad detail-panel">
-      <div className="detail-kicker">diary page</div>
+      <div className="detail-kicker">{detailKicker}</div>
       <h2>{entry.title}</h2>
       <div className="detail-meta">
         <span>{entry.metaLabel}</span>

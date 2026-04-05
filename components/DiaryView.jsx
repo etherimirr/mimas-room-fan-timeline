@@ -10,7 +10,11 @@ export default function DiaryView({
   return (
     <section className="diary-list">
       {featuredEntry ? (
-        <article className="entry panel entry-featured">
+        <button
+          className={`entry panel entry-button${selectedEntryId === featuredEntry.id ? " selected" : ""}`}
+          onClick={() => onOpenEntry(featuredEntry.id)}
+          type="button"
+        >
           <header>
             <h2>{featuredEntry.title}</h2>
             <small>{featuredEntry.metaLabel}</small>
@@ -28,7 +32,7 @@ export default function DiaryView({
           ) : null}
           <p>{featuredEntry.summary ?? featuredEntry.content}</p>
           <div className="meta">next live · {featuredEntry.metaLabel}</div>
-        </article>
+        </button>
       ) : null}
       {entries.map((entry) => {
         const isUnread = !user.read_entries.includes(entry.id);

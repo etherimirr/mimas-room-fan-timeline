@@ -675,11 +675,20 @@ textarea {
   overflow: auto;
 }
 
-.diary-list,
+.diary-list {
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-content: start;
+  padding-right: 6px;
+}
+
 .detail-panel {
   min-height: 0;
   max-height: 100%;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .status-grid {
@@ -758,7 +767,7 @@ textarea {
 .entry {
   position: relative;
   padding: 18px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .entry-button {

@@ -1,11 +1,13 @@
 import { formatElapsedHours } from "@/lib/time";
 
 export default function StatusPanel({ user, serverNow, eventLogs }) {
+  const visitorLabel = user.display_name || `麻粉${formatFanSuffix(user.id)}`;
+
   return (
     <div className="status-grid">
       <div className="status-card">
         <span>visitor</span>
-        <strong>{user.id}</strong>
+        <strong>{visitorLabel}</strong>
       </div>
       <div className="status-card">
         <span>first visit</span>
@@ -17,7 +19,7 @@ export default function StatusPanel({ user, serverNow, eventLogs }) {
       </div>
       <div className="status-card">
         <span>nickname</span>
-        <strong>{user.display_name || "guest"}</strong>
+        <strong>{user.display_name || "还没有留下名字"}</strong>
       </div>
       <div className="status-card">
         <span>read pages</span>
@@ -33,4 +35,12 @@ export default function StatusPanel({ user, serverNow, eventLogs }) {
       </div>
     </div>
   );
+}
+
+function formatFanSuffix(id) {
+  const suffix = String(id ?? "")
+    .replace(/^fan_/, "")
+    .slice(0, 6);
+
+  return suffix || "000000";
 }
