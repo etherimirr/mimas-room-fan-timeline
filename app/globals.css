@@ -80,6 +80,11 @@ textarea {
   overflow: hidden;
 }
 
+.desktop-surface {
+  position: relative;
+  min-height: 700px;
+}
+
 .monitor-screen::after {
   content: "";
   position: absolute;
@@ -114,6 +119,12 @@ textarea {
   width: min(100%, 780px);
   margin: 52px auto 16px;
   background: #f7f5fb;
+  transition: width 180ms ease, margin 180ms ease;
+}
+
+.desktop-window-main.expanded {
+  width: calc(100% - 24px);
+  margin: 12px auto 16px;
 }
 
 .desktop-titlebar {
@@ -131,6 +142,41 @@ textarea {
   height: 10px;
   border: 1px solid #9aa8ae;
   background: #eef3f6;
+}
+
+.desktop-titlebar.interactive {
+  justify-content: flex-start;
+}
+
+.window-dot {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.window-dot.close {
+  background: #e78489;
+  border-color: #bb666c;
+}
+
+.window-dot.minimize {
+  background: #efc96d;
+  border-color: #ba9a4d;
+}
+
+.window-dot.zoom {
+  background: #89c88f;
+  border-color: #5e9963;
+}
+
+.window-dot.muted {
+  border-radius: 2px;
+  border-color: #9aa8ae;
+  background: #eef3f6;
+  cursor: default;
 }
 
 .browser-strip {
@@ -316,6 +362,150 @@ textarea {
   padding: 14px;
   background: #f4f2f8;
 }
+
+.desktop-icons {
+  position: absolute;
+  left: 20px;
+  top: 84px;
+  display: grid;
+  gap: 16px;
+  z-index: 1;
+}
+
+.desktop-icon {
+  width: 92px;
+  border: none;
+  background: transparent;
+  color: #eef7fc;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(20, 56, 70, 0.45);
+}
+
+.desktop-folder {
+  position: relative;
+  width: 52px;
+  height: 38px;
+  background: linear-gradient(180deg, #f6dfa0, #edc96b);
+  border: 1px solid rgba(145, 115, 52, 0.8);
+  border-radius: 3px;
+  box-shadow: 0 6px 10px rgba(17, 52, 68, 0.14);
+}
+
+.desktop-folder::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -8px;
+  width: 18px;
+  height: 10px;
+  background: #f3d68e;
+  border: 1px solid rgba(145, 115, 52, 0.8);
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+}
+
+.desktop-folder.schedule {
+  background: linear-gradient(180deg, #d8daf8, #bec2ec);
+  border-color: rgba(92, 99, 150, 0.8);
+}
+
+.desktop-folder.schedule::before {
+  background: #d8daf8;
+  border-color: rgba(92, 99, 150, 0.8);
+}
+
+.desktop-folder.room {
+  background: linear-gradient(180deg, #f7d8e5, #ebb0c7);
+  border-color: rgba(152, 96, 118, 0.82);
+}
+
+.desktop-folder.room::before {
+  background: #f7d8e5;
+  border-color: rgba(152, 96, 118, 0.82);
+}
+
+.desktop-file {
+  position: relative;
+  width: 42px;
+  height: 54px;
+  background: linear-gradient(180deg, #ffffff, #eef3f8);
+  border: 1px solid rgba(135, 152, 170, 0.9);
+  box-shadow: 0 6px 10px rgba(17, 52, 68, 0.14);
+}
+
+.desktop-file::before {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #dfe7f0 50%, #ffffff 50%);
+  border-left: 1px solid rgba(135, 152, 170, 0.9);
+  border-bottom: 1px solid rgba(135, 152, 170, 0.9);
+}
+
+.desktop-file.html::after {
+  content: "html";
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  font-size: 10px;
+  line-height: 1;
+  color: #b66686;
+  text-transform: lowercase;
+}
+
+.desktop-window-file {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: min(360px, calc(100% - 40px));
+  background: #f8f6fb;
+  z-index: 3;
+}
+
+.file-window-body {
+  padding: 14px;
+}
+
+.file-window-body h3 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  color: #6a5d79;
+}
+
+.file-photo-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.file-photo-card {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(173, 181, 201, 0.7);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.file-photo-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid rgba(136, 110, 119, 0.4);
+}
+
+.schedule-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #6f667a;
+  line-height: 1.9;
+}
+
 
 .storyboard {
   display: grid;
@@ -558,6 +748,10 @@ textarea {
     padding: 12px;
   }
 
+  .desktop-surface {
+    min-height: auto;
+  }
+
   .desktop-window-back {
     display: none;
   }
@@ -565,6 +759,28 @@ textarea {
   .desktop-window-main {
     margin-top: 0;
     width: 100%;
+  }
+
+  .desktop-window-main.expanded {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .desktop-icons {
+    position: relative;
+    left: auto;
+    top: auto;
+    grid-template-columns: repeat(3, minmax(0, 92px));
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .desktop-window-file {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    margin-top: 12px;
   }
 
   .hero-poster {

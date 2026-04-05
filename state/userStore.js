@@ -1,6 +1,6 @@
 import { createDefaultUserState, createId, normalizeUserState } from "@/state/userSchema";
 
-const STORAGE_KEY = "fan-timeline-user-v1";
+const STORAGE_KEY = "fan-timeline-user-v2";
 
 export function createUserState(serverNow) {
   return createDefaultUserState(serverNow, createId());
