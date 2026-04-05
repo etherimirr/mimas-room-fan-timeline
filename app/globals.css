@@ -1,5 +1,5 @@
 :root {
-  --bg: #f5ead4;
+  --bg: #f7f3ef;
   --panel: rgba(255, 251, 254, 0.94);
   --panel-strong: rgba(255, 245, 251, 0.98);
   --line: rgba(164, 151, 184, 0.34);
@@ -18,7 +18,7 @@
 
 html {
   background:
-    linear-gradient(180deg, #f0dfc3 0%, #ead7bb 100%);
+    linear-gradient(180deg, #fffdfa 0%, #f7f2ed 100%);
 }
 
 body {
@@ -27,8 +27,8 @@ body {
   color: var(--text);
   font-family: "Times New Roman", Georgia, serif;
   background:
-    radial-gradient(circle at 50% 10%, rgba(255, 248, 236, 0.5), transparent 34%),
-    linear-gradient(180deg, #f2e2c8 0%, #e9d4b7 100%);
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.7), transparent 38%),
+    linear-gradient(180deg, #fffdfb 0%, #f5f0ea 100%);
 }
 
 a {
@@ -42,9 +42,9 @@ textarea {
 }
 
 .shell {
-  width: min(1360px, calc(100% - 24px));
+  width: min(1500px, calc(100% - 24px));
   margin: 0 auto;
-  padding: 24px 0 60px;
+  padding: 16px 0 28px;
 }
 
 .shell-loading {
@@ -55,80 +55,28 @@ textarea {
 
 .room-stage {
   position: relative;
-  min-height: calc(100vh - 84px);
+  min-height: calc(100vh - 40px);
   display: grid;
   place-items: center;
-  overflow: hidden;
-}
-
-.room-scene {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.scene-poster {
-  position: absolute;
-  right: 6%;
-  top: 5%;
-  width: 220px;
-  height: 260px;
-  background:
-    linear-gradient(180deg, rgba(184, 39, 40, 0.95), rgba(235, 177, 83, 0.8)),
-    linear-gradient(90deg, transparent 55%, rgba(255, 255, 255, 0.1) 55%);
-  box-shadow: 0 16px 24px rgba(108, 79, 39, 0.16);
-}
-
-.scene-vase {
-  position: absolute;
-  right: 8%;
-  bottom: 15%;
-  width: 86px;
-  height: 150px;
-  background:
-    linear-gradient(180deg, #7f6a53 0%, #66513f 60%, #3c3027 100%);
-  border-radius: 22px 22px 8px 8px;
-  box-shadow: 35px -34px 0 0 rgba(152, 41, 42, 0.75);
-}
-
-.scene-cactus {
-  position: absolute;
-  left: 5%;
-  bottom: 12%;
-  width: 54px;
-  height: 200px;
-  border-radius: 28px 28px 12px 12px;
-  background: linear-gradient(180deg, #4f8d58, #2a5936);
-  box-shadow:
-    inset 8px 0 rgba(255, 255, 255, 0.12),
-    inset -8px 0 rgba(0, 0, 0, 0.12);
 }
 
 .monitor-shell {
   position: relative;
-  width: min(860px, 100%);
+  width: min(1220px, 100%);
   z-index: 1;
-}
-
-.monitor-bezel {
-  background: linear-gradient(180deg, #dcc6a4 0%, #ccb28c 100%);
-  border: 1px solid #b99b77;
-  border-radius: 22px 22px 14px 14px;
-  padding: 34px 34px 24px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 32px 46px rgba(93, 65, 29, 0.22);
 }
 
 .monitor-screen {
   position: relative;
   background: #4d93a9;
-  border: 10px solid #b9c1b4;
+  border: 12px solid #b8c0bc;
+  border-radius: 6px;
   box-shadow:
     inset 0 0 0 2px #708f99,
-    inset 0 0 40px rgba(0, 0, 0, 0.16);
-  min-height: 620px;
-  padding: 18px;
+    inset 0 0 40px rgba(0, 0, 0, 0.16),
+    0 24px 46px rgba(123, 150, 164, 0.18);
+  min-height: 760px;
+  padding: 22px;
   overflow: hidden;
 }
 
@@ -153,18 +101,18 @@ textarea {
 }
 
 .desktop-window-back {
-  top: 28px;
-  left: 26px;
-  width: 42%;
-  height: 54%;
+  top: 20px;
+  left: 18px;
+  width: 46%;
+  height: 62%;
   opacity: 0.72;
 }
 
 .desktop-window-main {
   position: relative;
   inset: auto;
-  width: min(100%, 620px);
-  margin: 44px auto 20px;
+  width: min(100%, 780px);
+  margin: 52px auto 16px;
   background: #f7f5fb;
 }
 
@@ -363,7 +311,7 @@ textarea {
 
 .dashboard {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 16px;
   padding: 14px;
   background: #f4f2f8;
@@ -371,7 +319,7 @@ textarea {
 
 .storyboard {
   display: grid;
-  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
   gap: 14px;
   align-items: start;
 }
@@ -602,17 +550,7 @@ textarea {
 @media (max-width: 900px) {
   .room-stage {
     min-height: auto;
-    padding-top: 20px;
-  }
-
-  .scene-poster,
-  .scene-vase,
-  .scene-cactus {
-    display: none;
-  }
-
-  .monitor-bezel {
-    padding: 18px 18px 14px;
+    padding-top: 8px;
   }
 
   .monitor-screen {

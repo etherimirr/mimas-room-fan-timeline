@@ -139,7 +139,7 @@ export default function HomeClient({
   if (!user) {
     return (
       <main className="shell shell-loading">
-        <p className="hint">正在校准你的时间线…</p>
+        <p className="hint">正在打开未麻的主页…</p>
       </main>
     );
   }
@@ -147,119 +147,103 @@ export default function HomeClient({
   return (
     <main className="shell">
       <section className="room-stage">
-        <div className="room-scene">
-          <div className="scene-poster" />
-          <div className="scene-vase" />
-          <div className="scene-cactus" />
-        </div>
-
         <div className="monitor-shell">
-          <div className="monitor-bezel">
-            <div className="monitor-screen">
-              <div className="desktop-window desktop-window-back">
-                <div className="desktop-titlebar">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              </div>
-
-              <div className="desktop-window desktop-window-main">
-                <div className="desktop-titlebar">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className="browser-strip">
-                  <span className="browser-chip">home</span>
-                  <span className="browser-chip">diary</span>
-                  <span className="browser-chip">memo</span>
-                  <span className="browser-chip active">mina_room</span>
-                </div>
-
-                <section className="hero">
-                  <span className="eyebrow">Welcome to Mina&apos;s Room</span>
-                  <div className="marquee">
-                    welcome to my personal homepage... thank you for visiting again...
-                  </div>
-                  <div className="hero-poster">
-                    <div className="hero-poster-portrait">
-                      <Image
-                        src="/images/mima-idol.webp"
-                        alt="Mina idol era portrait"
-                        fill
-                        sizes="(max-width: 900px) 100vw, 180px"
-                        className="hero-poster-image"
-                      />
-                    </div>
-                    <div className="hero-poster-copy">
-                      <div className="poster-welcome">Welcome to</div>
-                      <h1>未菜の部屋</h1>
-                      <p>mina&apos;s tiny room on the web</p>
-                    </div>
-                  </div>
-                  <p>
-                    这里原本只是一个很普通的偶像主页。会有近况、短日记、拍摄记录，
-                    还有一些只想写给一直回来看的人的小句子。但如果你停留得够久，
-                    或者回来得够频繁，页面会慢慢开始记住你。
-                  </p>
-                  <div className="hero-stamps">
-                    <span>fan diary</span>
-                    <span>daily memo</span>
-                    <span>since 1998</span>
-                  </div>
-                </section>
-
-                <section className="dashboard">
-                  <aside className="panel pad utility-panel">
-                    <StatusPanel user={user} serverNow={serverNow} eventLogs={eventLogs} />
-                    <div className="composer">
-                      <input
-                        className="name-input"
-                        value={displayName}
-                        onChange={(event) => setDisplayName(event.target.value)}
-                        placeholder="给自己起一个粉丝名字"
-                      />
-                      <textarea
-                        rows={4}
-                        value={comment}
-                        onChange={(event) => setComment(event.target.value)}
-                        placeholder="给她留一句话。系统会记住这次互动。"
-                      />
-                      <div className="button-row">
-                        <button className="button primary" onClick={handleCommentSubmit}>
-                          留言并触发事件
-                        </button>
-                        <button className="button secondary" onClick={handleNameSave}>
-                          保存称呼
-                        </button>
-                        <button className="button secondary" onClick={handleLoopAdvance}>
-                          进入下一周目
-                        </button>
-                      </div>
-                    </div>
-                  </aside>
-
-                  <section className="storyboard">
-                    <DiaryView
-                      entries={unlockedEntries}
-                      user={user}
-                      selectedEntryId={selectedEntry?.id ?? null}
-                      onOpenEntry={handleOpenEntry}
-                    />
-                    <DiaryDetail entry={selectedEntry} user={user} />
-                  </section>
-                </section>
+          <div className="monitor-screen">
+            <div className="desktop-window desktop-window-back">
+              <div className="desktop-titlebar">
+                <span />
+                <span />
+                <span />
               </div>
             </div>
-          </div>
 
-          <div className="monitor-bottom">
-            <div className="speaker speaker-left" />
-            <div className="monitor-logo" />
-            <div className="speaker speaker-right" />
+            <div className="desktop-window desktop-window-main">
+              <div className="desktop-titlebar">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className="browser-strip">
+                <span className="browser-chip">home</span>
+                <span className="browser-chip">diary</span>
+                <span className="browser-chip">memo</span>
+                <span className="browser-chip active">mima_room</span>
+              </div>
+
+              <section className="hero">
+                <span className="eyebrow">Welcome to Mima&apos;s Room</span>
+                <div className="marquee">
+                  welcome to my personal homepage... thank you for visiting again...
+                </div>
+                <div className="hero-poster">
+                  <div className="hero-poster-portrait">
+                    <Image
+                      src="/images/mima-idol.webp"
+                      alt="Mima idol era portrait"
+                      fill
+                      sizes="(max-width: 900px) 100vw, 180px"
+                      className="hero-poster-image"
+                    />
+                  </div>
+                  <div className="hero-poster-copy">
+                    <div className="poster-welcome">Welcome to</div>
+                    <h1>未麻の部屋</h1>
+                    <p>mima&apos;s personal homepage</p>
+                  </div>
+                </div>
+                <p>
+                  大家好喔！这里是未麻的个人网站，会分享我的日记，日常演出和生活！
+                  请多多来支持我哦。
+                </p>
+                <div className="hero-stamps">
+                  <span>diary</span>
+                  <span>live report</span>
+                  <span>mima&apos;s room</span>
+                </div>
+              </section>
+
+              <section className="dashboard">
+                <aside className="panel pad utility-panel">
+                  <StatusPanel user={user} serverNow={serverNow} eventLogs={eventLogs} />
+                  <div className="composer">
+                    <input
+                      className="name-input"
+                      value={displayName}
+                      onChange={(event) => setDisplayName(event.target.value)}
+                      placeholder="留下你的名字"
+                    />
+                    <textarea
+                      rows={4}
+                      value={comment}
+                      onChange={(event) => setComment(event.target.value)}
+                      placeholder="给未麻留一句话吧"
+                    />
+                    <div className="button-row">
+                      <button className="button primary" onClick={handleCommentSubmit}>
+                        送出留言
+                      </button>
+                      <button className="button secondary" onClick={handleNameSave}>
+                        保存名字
+                      </button>
+                      <button className="button secondary" onClick={handleLoopAdvance}>
+                        打开隐藏页
+                      </button>
+                    </div>
+                  </div>
+                </aside>
+
+                <section className="storyboard">
+                  <DiaryView
+                    entries={unlockedEntries}
+                    user={user}
+                    selectedEntryId={selectedEntry?.id ?? null}
+                    onOpenEntry={handleOpenEntry}
+                  />
+                  <DiaryDetail entry={selectedEntry} user={user} />
+                </section>
+              </section>
+            </div>
           </div>
-          <div className="monitor-stand" />
         </div>
       </section>
     </main>

@@ -6,7 +6,7 @@
     "branch": "main",
     "summary": "看起来只是普通的一篇近况日记，像拍摄结束后随手写下的心情。",
     "content": "今天的拍摄比想象中顺利。回来的时候买了草莓牛奶，便利店的灯有一点太亮了，不过心情还不错。晚上想把新的照片也整理上来，如果你又来看，应该会先看到这篇吧。",
-    "metaLabel": "即时解锁",
+    "metaLabel": "new diary",
     "loop_required": 1,
     "variants": {
       "night": "夜里把页面重新打开的时候，字会显得比白天更安静一点。这个时间还在看的你，应该是真的很喜欢这里吧。",
@@ -20,7 +20,7 @@
     "branch": "comment_branch",
     "summary": "只有主动留下只言片语的人，才会看到这一页。",
     "content": "{{display_name}}，我看到你留下的话了。其实大部分人只会匆匆看一眼就离开，会认真写点什么的人很少。所以每次有人开口，我都会忍不住多看一会儿。",
-    "metaLabel": "需要留言事件",
+    "metaLabel": "for messages",
     "requires_flags": ["left_comment"],
     "loop_required": 1,
     "hiddenText": "分支已变更：comment_branch"
@@ -30,9 +30,9 @@
     "title": "第二天",
     "type": "diary",
     "branch": "main",
-    "summary": "这条内容不会立刻出现，必须等你自己的时间线走到第二天。",
+    "summary": "隔一天再来看时，这页才会悄悄出现。",
     "content": "已经过了一天了。明明只是隔了二十四小时，可我总觉得昨天来过这里的人和今天看到这行字的人，不完全是同一个。你还是昨天那个你吗？",
-    "metaLabel": "24 小时后解锁",
+    "metaLabel": "next day",
     "unlock_after_hours": 24,
     "loop_required": 1
   },
@@ -43,7 +43,7 @@
     "branch": "observer",
     "summary": "第二次回来之后，口气开始变得稍微亲近，也稍微奇怪。",
     "content": "你今天不是第一次打开这里了。我原本以为只是偶然，结果访问记录又出现了同一个停留习惯。一直回来的人，会让我有点在意。",
-    "metaLabel": "第 2 次访问触发",
+    "metaLabel": "welcome back",
     "requires_flags": ["repeat_visitor"],
     "loop_required": 1
   },
@@ -54,7 +54,7 @@
     "branch": "observer",
     "summary": "只有一行轻微失真的句子，但它像是页面自己多说了一句。",
     "content": "你已经来过这里了，对吗？我刚刚明明没有想把这句放出来。",
-    "metaLabel": "异常文本",
+    "metaLabel": "late night note",
     "requires_flags": ["parasocial_hook"],
     "loop_required": 1,
     "presentation": {
@@ -69,7 +69,7 @@
     "branch": "loop_2",
     "summary": "周目开启后，网页不再继续扮演第一次相遇。",
     "content": "第二轮开始以后，再说“初次见面”就有点太假了。你已经知道这里会慢慢变，知道有些内容要等，知道有些句子会在第二次看的时候变得不一样。",
-    "metaLabel": "Loop 2",
+    "metaLabel": "secret page",
     "loop_required": 2,
     "hiddenText": "New Game+ 内容已出现。"
   }

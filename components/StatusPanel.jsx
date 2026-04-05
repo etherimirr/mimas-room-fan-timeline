@@ -4,32 +4,32 @@ export default function StatusPanel({ user, serverNow, eventLogs }) {
   return (
     <div className="status-grid">
       <div className="status-card">
-        <span>粉丝编号</span>
+        <span>visitor</span>
         <strong>{user.id}</strong>
       </div>
       <div className="status-card">
-        <span>首次进入</span>
+        <span>first visit</span>
         <strong>{new Date(user.first_seen_at).toLocaleString()}</strong>
       </div>
       <div className="status-card">
-        <span>已过去</span>
+        <span>since then</span>
         <strong>{formatElapsedHours(user.first_seen_at, serverNow)}</strong>
       </div>
       <div className="status-card">
-        <span>当前周目</span>
-        <strong>Loop {user.loop}</strong>
+        <span>nickname</span>
+        <strong>{user.display_name || "guest"}</strong>
       </div>
       <div className="status-card">
-        <span>已触发 Flags</span>
-        <strong>{Object.keys(user.flags).length}</strong>
+        <span>read pages</span>
+        <strong>{user.read_entries.length}</strong>
       </div>
       <div className="status-card">
-        <span>当前分支</span>
-        <strong>{user.current_branch}</strong>
+        <span>visits</span>
+        <strong>{user.visit_count}</strong>
       </div>
       <div className="status-card">
-        <span>最近回响</span>
-        <strong>{eventLogs[0] ?? "系统还在观察你"}</strong>
+        <span>latest note</span>
+        <strong>{eventLogs[0] ?? "谢谢你来看我"}</strong>
       </div>
     </div>
   );

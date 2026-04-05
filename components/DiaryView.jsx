@@ -23,8 +23,7 @@ export default function DiaryView({
             </header>
             <p>{entry.summary ?? entry.content}</p>
             <div className="meta">
-              {isUnread ? "新内容" : "已读"} · 分支 {entry.branch ?? "main"} · 周目{" "}
-              {entry.loop_required ?? 1}
+              {isUnread ? "new" : "read"} · {entry.metaLabel}
             </div>
           </button>
         );

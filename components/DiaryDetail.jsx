@@ -17,7 +17,7 @@ export default function DiaryDetail({ entry, user }) {
 
   return (
     <article className="panel pad detail-panel">
-      <div className="detail-kicker">Diary Detail</div>
+      <div className="detail-kicker">diary page</div>
       <h2>{entry.title}</h2>
       <div className="detail-meta">
         <span>{entry.metaLabel}</span>
