@@ -76,6 +76,7 @@ textarea {
     inset 0 0 40px rgba(0, 0, 0, 0.16),
     0 24px 46px rgba(123, 150, 164, 0.18);
   min-height: 760px;
+  max-height: calc(100vh - 72px);
   padding: 22px;
   overflow: hidden;
 }
@@ -83,6 +84,7 @@ textarea {
 .desktop-surface {
   position: relative;
   min-height: 700px;
+  height: min(700px, calc(100vh - 140px));
 }
 
 .monitor-screen::after {
@@ -119,12 +121,17 @@ textarea {
   width: min(100%, 780px);
   margin: 52px auto 16px;
   background: #f7f5fb;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 180px);
+  overflow: hidden;
   transition: width 180ms ease, margin 180ms ease;
 }
 
 .desktop-window-main.expanded {
   width: calc(100% - 24px);
   margin: 12px auto 16px;
+  max-height: calc(100vh - 84px);
 }
 
 .desktop-titlebar {
@@ -254,6 +261,7 @@ textarea {
     linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 244, 249, 0.96)),
     linear-gradient(90deg, rgba(234, 199, 218, 0.16), transparent);
   border-bottom: 1px solid #d7cada;
+  flex-shrink: 0;
 }
 
 .eyebrow {
@@ -361,6 +369,8 @@ textarea {
   gap: 16px;
   padding: 14px;
   background: #f4f2f8;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .desktop-icons {
@@ -428,6 +438,16 @@ textarea {
   border-color: rgba(152, 96, 118, 0.82);
 }
 
+.desktop-folder.guestbook {
+  background: linear-gradient(180deg, #dff4d7, #bfe2b5);
+  border-color: rgba(83, 131, 85, 0.82);
+}
+
+.desktop-folder.guestbook::before {
+  background: #dff4d7;
+  border-color: rgba(83, 131, 85, 0.82);
+}
+
 .desktop-file {
   position: relative;
   width: 42px;
@@ -491,10 +511,14 @@ textarea {
   width: min(360px, calc(100% - 40px));
   background: #f8f6fb;
   z-index: 3;
+  max-height: calc(100% - 48px);
+  overflow: hidden;
 }
 
 .file-window-body {
   padding: 14px;
+  max-height: calc(100% - 22px);
+  overflow: auto;
 }
 
 .file-window-body h3 {
@@ -537,12 +561,56 @@ textarea {
   line-height: 1.9;
 }
 
+.guestbook-thread {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+  max-height: 240px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.guestbook-bubble {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(173, 181, 201, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  color: #6f667a;
+}
+
+.guestbook-bubble.mima {
+  border-color: rgba(210, 154, 179, 0.72);
+  background: rgba(255, 243, 248, 0.92);
+}
+
+.guestbook-bubble.fan {
+  border-color: rgba(157, 182, 210, 0.72);
+  background: rgba(245, 250, 255, 0.92);
+}
+
+.guestbook-compose {
+  display: grid;
+  gap: 8px;
+}
+
+.guestbook-compose textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--text);
+  padding: 10px;
+  resize: vertical;
+}
+
 
 .storyboard {
   display: grid;
   grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
   gap: 14px;
-  align-items: start;
+  align-items: stretch;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .panel {
@@ -557,7 +625,16 @@ textarea {
 }
 
 .utility-panel {
-  align-self: start;
+  align-self: stretch;
+  min-height: 0;
+  overflow: auto;
+}
+
+.diary-list,
+.detail-panel {
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
 }
 
 .status-grid {
@@ -776,11 +853,13 @@ textarea {
 
   .monitor-screen {
     min-height: auto;
+    max-height: none;
     padding: 12px;
   }
 
   .desktop-surface {
     min-height: auto;
+    height: auto;
   }
 
   .desktop-window-back {
@@ -790,11 +869,13 @@ textarea {
   .desktop-window-main {
     margin-top: 0;
     width: 100%;
+    max-height: none;
   }
 
   .desktop-window-main.expanded {
     width: 100%;
     margin-top: 0;
+    max-height: none;
   }
 
   .desktop-icons {
@@ -811,6 +892,7 @@ textarea {
     right: auto;
     bottom: auto;
     width: 100%;
+    max-height: none;
     margin-top: 12px;
   }
 

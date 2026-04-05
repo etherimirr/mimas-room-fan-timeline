@@ -28,6 +28,21 @@ export default function HomeClient({
   const [mainWindowMinimized, setMainWindowMinimized] = useState(false);
   const [mainWindowExpanded, setMainWindowExpanded] = useState(false);
   const [desktopWindow, setDesktopWindow] = useState(null);
+  const [guestbookDraft, setGuestbookDraft] = useState("");
+  const [guestbookMessages, setGuestbookMessages] = useState([
+    {
+      id: "mima-1",
+      author: "未麻",
+      body: "谢谢你来看我的主页，如果方便的话，也给我留一句话吧。",
+      side: "mima"
+    },
+    {
+      id: "fan-1",
+      author: "粉丝",
+      body: "今天的演出很棒，我会继续支持你的！",
+      side: "fan"
+    }
+  ]);
 
   useEffect(() => {
     const existing = loadUserState();
@@ -164,6 +179,31 @@ export default function HomeClient({
     setDesktopWindow(type);
   }
 
+  function handleGuestbookSubmit() {
+    const message = guestbookDraft.trim();
+    if (!message) {
+      return;
+    }
+
+    const fanName = displayName.trim() || "粉丝";
+    setGuestbookMessages((current) => [
+      ...current,
+      {
+        id: `fan-${Date.now()}`,
+        author: fanName,
+        body: message,
+        side: "fan"
+      },
+      {
+        id: `mima-${Date.now() + 1}`,
+        author: "未麻",
+        body: "我看到你的留言了，谢谢你一直来看我。下次也要再来喔。",
+        side: "mima"
+      }
+    ]);
+    setGuestbookDraft("");
+  }
+
   if (!user) {
     return (
       <main className="shell shell-loading">
@@ -177,14 +217,6 @@ export default function HomeClient({
       <section className="room-stage">
         <div className="monitor-shell">
           <div className="monitor-screen">
-            <div className="desktop-window desktop-window-back">
-              <div className="desktop-titlebar">
-                <button aria-label="close background window" className="window-dot muted" type="button" />
-                <button aria-label="minimize background window" className="window-dot muted" type="button" />
-                <button aria-label="zoom background window" className="window-dot muted" type="button" />
-              </div>
-            </div>
-
             <div className="desktop-surface">
               {mainWindowVisible ? (
                 <div
@@ -295,12 +327,10 @@ export default function HomeClient({
               ) : null}
 
               <div className="desktop-icons">
-                {!mainWindowVisible ? (
-                  <button className="desktop-icon" onClick={handleRestoreMainWindow} type="button">
-                    <span className="desktop-file html" />
-                    <span>未麻の部屋.html</span>
-                  </button>
-                ) : null}
+                <button className="desktop-icon" onClick={handleRestoreMainWindow} type="button">
+                  <span className="desktop-file html" />
+                  <span>未麻の部屋.html</span>
+                </button>
                 <button
                   className="desktop-icon"
                   onClick={() => handleOpenDesktopWindow("photos")}
@@ -316,6 +346,14 @@ export default function HomeClient({
                 >
                   <span className="desktop-folder schedule" />
                   <span>未麻的行程</span>
+                </button>
+                <button
+                  className="desktop-icon"
+                  onClick={() => handleOpenDesktopWindow("guestbook")}
+                  type="button"
+                >
+                  <span className="desktop-folder guestbook" />
+                  <span>留言箱</span>
                 </button>
                 <button
                   className="desktop-icon desktop-icon-trash"
@@ -382,6 +420,32 @@ export default function HomeClient({
                               <li>4/6 18:30 电台录音</li>
                               <li>4/8 17:00 CHAM 现场活动</li>
                             </ul>
+                          </>
+                        ) : desktopWindow === "guestbook" ? (
+                          <>
+                            <h3>留言箱</h3>
+                            <div className="guestbook-thread">
+                              {guestbookMessages.map((message) => (
+                                <div
+                                  className={`guestbook-bubble ${message.side}`}
+                                  key={message.id}
+                                >
+                                  <strong>{message.author}</strong>
+                                  <span>{message.body}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="guestbook-compose">
+                              <textarea
+                                rows={3}
+                                value={guestbookDraft}
+                                onChange={(event) => setGuestbookDraft(event.target.value)}
+                                placeholder="给未麻写封短短的留言吧"
+                              />
+                              <button className="button primary" onClick={handleGuestbookSubmit}>
+                                送出邮件
+                              </button>
+                            </div>
                           </>
                         ) : (
                           <>
