@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import DiaryView from "@/components/DiaryView";
 import DiaryDetail from "@/components/DiaryDetail";
 import StatusPanel from "@/components/StatusPanel";
@@ -27,6 +27,7 @@ export default function HomeClient({
   const [mainWindowVisible, setMainWindowVisible] = useState(true);
   const [mainWindowMinimized, setMainWindowMinimized] = useState(false);
   const [mainWindowExpanded, setMainWindowExpanded] = useState(false);
+  const [mainWindowPosition, setMainWindowPosition] = useState({ x: 0, y: 52 });
   const [desktopWindow, setDesktopWindow] = useState(null);
   const [guestbookDraft, setGuestbookDraft] = useState("");
   const [guestbookMessages, setGuestbookMessages] = useState([
@@ -43,6 +44,9 @@ export default function HomeClient({
       side: "fan"
     }
   ]);
+  const desktopSurfaceRef = useRef(null);
+  const mainWindowRef = useRef(null);
+  const dragStateRef = useRef(null);
 
   useEffect(() => {
     const existing = loadUserState();
@@ -115,6 +119,43 @@ export default function HomeClient({
       setSelectedEntryId(nextSelectedEntryId);
     }
   }, [selectableEntries, selectedEntryId]);
+
+  useEffect(() => {
+    if (!mainWindowVisible || mainWindowExpanded) {
+      return;
+    }
+
+    centerMainWindow();
+  }, [mainWindowExpanded, mainWindowVisible]);
+
+  useEffect(() => {
+    function handlePointerMove(event) {
+      const dragState = dragStateRef.current;
+      if (!dragState || !desktopSurfaceRef.current || !mainWindowRef.current) {
+        return;
+      }
+
+      const surfaceRect = desktopSurfaceRef.current.getBoundingClientRect();
+      const windowRect = mainWindowRef.current.getBoundingClientRect();
+      const nextX = event.clientX - surfaceRect.left - dragState.offsetX;
+      const nextY = event.clientY - surfaceRect.top - dragState.offsetY;
+      setMainWindowPosition(
+        clampWindowPosition(nextX, nextY, surfaceRect.width, surfaceRect.height, windowRect.width, windowRect.height)
+      );
+    }
+
+    function handlePointerUp() {
+      dragStateRef.current = null;
+    }
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, []);
 
   function updateUser(nextUser) {
     saveUserState(nextUser);
@@ -190,6 +231,32 @@ export default function HomeClient({
     setDesktopWindow(null);
   }
 
+  function handleMainWindowDragStart(event) {
+    if (mainWindowExpanded || event.target.closest("button") || !mainWindowRef.current) {
+      return;
+    }
+
+    const rect = mainWindowRef.current.getBoundingClientRect();
+    dragStateRef.current = {
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top
+    };
+  }
+
+  function centerMainWindow() {
+    if (!desktopSurfaceRef.current || !mainWindowRef.current) {
+      return;
+    }
+
+    const surfaceRect = desktopSurfaceRef.current.getBoundingClientRect();
+    const windowRect = mainWindowRef.current.getBoundingClientRect();
+    const centeredX = Math.max((surfaceRect.width - windowRect.width) / 2, 12);
+    setMainWindowPosition({
+      x: centeredX,
+      y: 52
+    });
+  }
+
   function handleOpenDesktopWindow(type) {
     setDesktopWindow(type);
   }
@@ -232,14 +299,23 @@ export default function HomeClient({
       <section className="room-stage">
         <div className="monitor-shell">
           <div className="monitor-screen">
-            <div className="desktop-surface">
+            <div className="desktop-surface" ref={desktopSurfaceRef}>
               {mainWindowVisible ? (
                 <div
+                  ref={mainWindowRef}
                   className={`desktop-window desktop-window-main${
                     mainWindowExpanded ? " expanded" : ""
                   }`}
+                  style={
+                    mainWindowExpanded
+                      ? { top: 12, left: 12 }
+                      : { top: mainWindowPosition.y, left: mainWindowPosition.x }
+                  }
                 >
-                  <div className="desktop-titlebar interactive">
+                  <div
+                    className={`desktop-titlebar interactive${mainWindowExpanded ? "" : " draggable"}`}
+                    onPointerDown={handleMainWindowDragStart}
+                  >
                     <button
                       aria-label="close window"
                       className="window-dot close"
@@ -514,4 +590,15 @@ export default function HomeClient({
       </section>
     </main>
   );
+}
+
+function clampWindowPosition(x, y, surfaceWidth, surfaceHeight, windowWidth, windowHeight) {
+  return {
+    x: clamp(x, 12, Math.max(surfaceWidth - windowWidth - 12, 12)),
+    y: clamp(y, 12, Math.max(surfaceHeight - windowHeight - 12, 12))
+  };
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
